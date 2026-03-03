@@ -1,15 +1,38 @@
-# ND_PRO-CV-IVOIRE
-📄 Description de ND_PRO-CV_IVOIRE
-PRO-CV IVOIRE est une plateforme web innovante et gratuite, créée par Ndiaye Techn, spécialement conçue pour répondre aux besoins des élèves, étudiants et chercheurs d'emploFonctionnalités Principales :
-Compatibilité 100/100 : Fonctionne parfaitement sur tous les navigateurs mobiles, que vous utilisiez un Android (comme le POCO X4 Pro) ou un iPhone.
 
-Réalisme Professionnel : Mise en page élégante avec intégration automatique de votre photo de profil dans un design épuré et moderne.
+# 👑 ND-PRO-cv_IVoIRE | Ndiaye Techn
 
-Format Universel : Exportation immédiate au format A4 standard, garantissant que votre CV sera lisible par tous les recruteurs.
+**ND-PRO-cv_IVoIRE** est une application web mobile-first de création de CV professionnels, spécialement conçue pour le marché ivoirien. Développée par **Ndiaye Techn**, cette plateforme permet de générer des CV au format PDF haute qualité directement depuis un smartphone (Android & iOS).
 
-Système Viral : Intègre un module de partage WhatsApp obligatoire pour faire profiter votre entourage de cet outil gratuit.Système Viral : Intègre un module de partage WhatsApp obligatoire pour faire profiter votre entourage de cet outil gratuit.
+## 🚀 Concept & Modèle Économique (SaaS Freemium)
 
-Sécurité et Suivi : Chaque création fait l'objet d'un rapport de sécurité archivé par Ndiaye Techn pour garantir la fiabilité du service.🚀 Pourquoi choisir PRO-CV IVOIRE ?
-À Abidjan, l'accès à un ordinateur est parfois difficile. ND_PRO-CV IVOIRE élimine cette barrière en offrant une solution de qualité "ordinateur" directement sur votre téléphone. C'est l'outil indispensable pour tout élève de 1ère A2 ou jeune diplômé souhaitant valoriser son parcours avec une image professionnelle.i en Côte d'Ivoire.
+Le projet intègre un système de monétisation autonome adapté aux réalités locales (Mobile Money) sans nécessiter d'API bancaire complexe.
 
-L'outil permet de transformer un simple formulaire mobile en un Curriculum Vitae (CV) professionnel au format PDF haute définition, prêt à l'emploi pour vos candidatures via WhatsApp, mail ou impression physique.
+* **Mode Standard (Gratuit)** : Limité à 3 générations de CV. Nécessite un partage WhatsApp obligatoire pour débloquer le téléchargement. Rendu avec un design violet classique et un filigrane de l'application.
+* **Mode VIP (500 FCFA / 30 Jours)** : Débloqué via un paiement autonome Wave ou Orange Money. Le CV passe en "Or massif" (bordures dorées, badge certifié, suppression des publicités).
+
+## 🛠️ Fonctionnalités Techniques Avancées
+
+* **Génération PDF Client-Side** : Utilisation de `html2pdf.js` pour transformer le DOM HTML en un document PDF A4 parfait, garantissant la confidentialité des données (pas de stockage serveur des CV).
+* **Système Anti-Piratage (Base64)** : L'abonnement VIP est stocké localement et chiffré. Le système valide automatiquement les dates d'expiration (30 jours) et bloque les tentatives de triche logicielle.
+* **Paiement Auto par Transaction ID** : Un algorithme vérifie la validité du format des ID de transaction Wave/Orange Money saisis par l'utilisateur pour activer l'abonnement en temps réel.
+* **Tracking Telegram API** : Le système utilise les *Serverless Functions* de Vercel (`api/send.js`) pour envoyer des notifications silencieuses à l'administrateur via un Bot Telegram à chaque étape clé (génération, tentative de paiement, abonnement VIP).
+
+## 💻 Stack Technologique
+
+* **Frontend** : HTML5, Vanilla JavaScript
+* **Styling** : Tailwind CSS (via CDN pour la rapidité)
+* **Librairies** : html2pdf.bundle.min.js
+* **Backend / API** : Node.js (Vercel Serverless Functions)
+* **Base de données** : LocalStorage (Côté client avec chiffrement)
+
+## 📦 Déploiement
+
+Ce projet est optimisé pour un déploiement en 1 clic sur **Vercel**.
+Le fichier `vercel.json` est déjà configuré pour router correctement les requêtes vers l'API Telegram.
+
+1. Clonez ce dépôt.
+2. Liez le dépôt à votre compte Vercel.
+3. Le déploiement se fait automatiquement.
+
+---
+*Un produit pensé, designé et développé par **Ndiaye Techn** - Abidjan, Côte d'Ivoire.* 🇨🇮
