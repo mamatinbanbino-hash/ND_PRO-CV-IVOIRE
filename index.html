@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ND-PRO-cv_IVoIRE | Ndiaye Techn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root { --nd-purple: #bc13fe; --nd-gold: #D4AF37; }
+        body { background-color: #f8fafc; font-family: 'Segoe UI', system-ui, -apple-system; -webkit-user-select: none; user-select: none; overflow-x: hidden; }
+        .btn-pro { background: linear-gradient(135deg, var(--nd-purple) 0%, #7a0bc0 100%); color: white; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 15px -3px rgba(188, 19, 254, 0.3); }
+        .input-pro { width: 100%; padding: 12px 16px; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; font-size: 14px; outline: none; transition: 0.3s; }
+        .input-pro:focus { border-color: var(--nd-purple); box-shadow: 0 0 0 4px rgba(188, 19, 254, 0.1); }
+        .title-edit { width: 100%; font-size: 11px; font-weight: 800; color: var(--nd-purple); text-transform: uppercase; background: transparent; border: none; border-bottom: 1px dashed var(--nd-purple); outline: none; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .pdf-hidden-container { position: absolute; top: 0; left: -9999px; width: 210mm; background: white; z-index: -9999; }
+        .vip-gold-card { background: linear-gradient(135deg, #FFD700 0%, #D4AF37 100%); color: black !important; font-weight: 900; border: none; }
+        .guide-box { background: rgba(188, 19, 254, 0.05); backdrop-filter: blur(5px); border-left: 5px solid var(--nd-purple); padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 12px; line-height: 1.6; }
+        @keyframes pulse-vip { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.05); } }
+        .vip-status-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; margin-right: 5px; animation: pulse-vip 2s infinite; }
+    </style>
+</head>
+<body class="p-4 md:p-8" oncontextmenu="return false;">
+
+    <div class="max-w-md mx-auto bg-white p-6 md:p-8 rounded-[3rem] shadow-2xl border-t-[10px] border-[#bc13fe] relative">
+        <header class="text-center mb-8">
+            <div class="flex justify-center mb-4 transform hover:scale-110 transition-transform">
+                <img src="ndiaye_cv.png" alt="Logo NT" class="h-20 w-auto object-contain drop-shadow-lg" onerror="this.style.display='none'">
+            </div>
+            <h1 class="text-3xl font-black text-slate-900 uppercase tracking-tighter">ND-PRO-cv_<span class="text-[#bc13fe]">IVoIRE</span></h1>
+            <div class="mt-3 inline-flex items-center bg-slate-100 py-1.5 px-5 rounded-full border border-slate-200">
+                <span class="text-[11px] font-bold uppercase text-slate-500 tracking-widest">Crédits: <span id="cv-left" class="text-[#bc13fe]">3</span>/3</span>
+            </div>
+        </header>
+
+        <div class="space-y-6">
+            <div class="flex gap-2 p-1.5 bg-slate-100 rounded-2xl" id="mode-selector">
+                <button onclick="setMode('gratuit')" id="tab-g" class="flex-1 py-3.5 rounded-xl text-[11px] font-black bg-white shadow-sm text-[#bc13fe] transition-all">MODE STANDARD</button>
+                <button onclick="setMode('premium')" id="tab-p" class="flex-1 py-3.5 rounded-xl text-[11px] font-black text-slate-500 hover:text-[#bc13fe] transition-all">ACCÈS VIP (500F)</button>
+            </div>
+
+            <div id="sub-badge" class="hidden p-4 bg-yellow-50 text-yellow-700 text-center rounded-2xl font-bold text-xs border border-yellow-200 shadow-inner">
+                <span class="vip-status-dot"></span> MEMBRE VIP PRESTIGE ACTIF
+            </div>
+            <div id="renew-msg" class="hidden p-4 bg-orange-50 text-orange-700 text-center rounded-2xl font-bold text-xs border border-orange-200">
+                ⌛ ABONNEMENT EXPIRÉ - RENOUVELLEMENT REQUIS
+            </div>
+
+            <div class="space-y-4" id="cv-form">
+                <div class="group">
+                    <input type="text" id="name" oninput="checkInputs()" placeholder="Nom et Prénoms complets" class="input-pro font-bold">
+                </div>
+                <input type="text" id="job" oninput="checkInputs()" placeholder="Titre du CV (ex: Assistant de Direction)" class="input-pro font-bold text-[#bc13fe]">
+                
+                <div class="flex gap-3">
+                    <input type="email" id="email" placeholder="Email" class="input-pro w-1/2">
+                    <input type="tel" id="phone" oninput="checkInputs()" placeholder="WhatsApp" class="input-pro w-1/2">
+                </div>
+                
+                <input type="text" id="city" placeholder="Ville (ex: Abidjan, Angré)" class="input-pro">
+                
+                <div class="bg-slate-50 p-3 rounded-xl border border-dashed border-slate-300">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase block mb-2">Photo de profil</label>
+                    <input type="file" id="photo" accept="image/*" onchange="checkInputs()" class="text-[10px] text-slate-500 w-full">
+                </div>
+
+                <div class="pt-6 space-y-5">
+                    <p class="text-[10px] text-center font-medium text-slate-400 italic">Cliquez sur les titres pour personnaliser les rubriques</p>
+                    <div class="bg-white">
+                        <input type="text" id="t1" value="Profil Professionnel" class="title-edit">
+                        <textarea id="c1" placeholder="Décrivez vos forces en quelques lignes..." class="input-pro h-24 text-sm"></textarea>
+                    </div>
+                    <div>
+                        <input type="text" id="t2" value="Expériences" class="title-edit">
+                        <textarea id="c2" placeholder="Postes occupés, entreprises et dates..." class="input-pro h-28 text-sm"></textarea>
+                    </div>
+                    <div>
+                        <input type="text" id="t3" value="Parcours Scolaire" class="title-edit">
+                        <textarea id="c3" placeholder="Diplômes et établissements..." class="input-pro h-24 text-sm"></textarea>
+                    </div>
+                    <div>
+                        <input type="text" id="t4" value="Compétences & Atouts" class="title-edit">
+                        <textarea id="c4" placeholder="Logiciels, Langues, Permis..." class="input-pro h-24 text-sm"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div id="action-zone" class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 text-center">
+                <p id="status-text" class="text-[11px] text-slate-400 font-bold mb-4 uppercase tracking-[0.2em]">Sécurité ND-PRO active</p>
+                
+                <button onclick="runShare()" id="share-btn" class="w-full py-4.5 bg-[#25D366] text-white font-black rounded-2xl text-xs shadow-lg flex items-center justify-center gap-3 active:scale-95 transition-all">
+                    PARTAGER SUR WHATSAPP
+                </button>
+                
+                <div id="payment-zone" class="hidden text-left space-y-4">
+                    <div class="guide-box">
+                        <h4 class="font-black text-[#bc13fe] mb-2 uppercase text-[10px]">🚀 Activation automatique 24h/24</h4>
+                        <ul class="space-y-1 text-slate-600">
+                            <li>1. Dépôt <b>500F</b> au <b>07 07 65 63 55</b></li>
+                            <li>2. Copiez l'<b>ID de transaction</b> du SMS</li>
+                            <li>3. Collez l'ID ci-dessous</li>
+                        </ul>
+                    </div>
+                    <input type="text" id="trans-id" placeholder="ID TRANSACTION (Ex: WI...)" class="input-pro text-center font-black tracking-widest border-2 border-[#1cc5dc]">
+                    <button onclick="verifyVIP()" class="w-full py-4.5 bg-[#1cc5dc] text-white font-black rounded-2xl text-xs uppercase shadow-xl hover:brightness-110 active:scale-95 transition-all">DÉBLOQUER MON ACCÈS VIP</button>
+                </div>
+            </div>
+
+            <button id="dl-btn" disabled onclick="generatePDF()" class="w-full py-5 bg-slate-200 text-slate-400 font-black rounded-3xl uppercase text-[11px] tracking-[0.25em] transition-all">Générer mon CV PDF</button>
+        </div>
+        
+        <footer class="mt-8 text-center text-[9px] text-slate-400 font-bold uppercase tracking-widest">
+            Powered by Ndiaye Techn &copy; 2026
+        </footer>
+    </div>
+
+    <div class="pdf-hidden-container">
+        <div id="cv-render" style="background: white; width: 210mm;">
+            <div id="render-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // 👮 SÉCURITÉ & CONFIG
+        const BLACKLIST = ["0000000000"]; 
+        const _K_C = 'nd_c_v330'; const _K_S = 'nd_s_v330';
+        let count = parseInt(localStorage.getItem(_K_C) || '0');
+        let isVIP = false;
+
+        // VÉRIFICATION ANTI-HACK DE L'ABONNEMENT
+        function checkVIP() {
+            const s = localStorage.getItem(_K_S);
+            if (!s) return false;
+            try {
+                const p = JSON.parse(atob(s));
+                const isValid = (p.exp > Date.now() && p.st === 'VIP');
+                if (!isValid && p.st === 'VIP') document.getElementById('renew-msg').classList.remove('hidden');
+                return isValid;
+            } catch(e) { return false; }
+        }
+
+        isVIP = checkVIP();
+
+        // VALIDATION DES CHAMPS EN TEMPS RÉEL
+        function checkInputs() {
+            const n = document.getElementById('name').value;
+            const j = document.getElementById('job').value;
+            const ph = document.getElementById('phone').value;
+            const photo = document.getElementById('photo').files.length > 0;
+            const dl = document.getElementById('dl-btn');
+
+            // Le bouton ne s'active que si le partage est fait OU si VIP
+            if(n && j && ph && photo && (dl.getAttribute('data-unlocked') === 'true' || isVIP)) {
+                dl.disabled = false;
+                dl.classList.replace('bg-slate-200', isVIP ? 'vip-gold-card' : 'btn-pro');
+                dl.classList.replace('text-slate-400', isVIP ? 'text-black' : 'text-white');
+            }
+        }
+
+        function initSystem() {
+            document.getElementById('cv-left').innerText = Math.max(0, 3 - count);
+            if (isVIP) {
+                document.getElementById('mode-selector').classList.add('hidden');
+                document.getElementById('action-zone').classList.add('hidden');
+                document.getElementById('sub-badge').classList.remove('hidden');
+                checkInputs();
+            } else if (count >= 3) {
+                setMode('premium');
+                document.getElementById('tab-g').disabled = true;
+                document.getElementById('tab-g').style.opacity = '0.3';
+            }
+        }
+
+        function setMode(m) {
+            if (count >= 3 && m === 'gratuit' && !isVIP) return;
+            const btn = document.getElementById('share-btn');
+            const pz = document.getElementById('payment-zone');
+            if(m === 'premium') {
+                btn.classList.add('hidden'); pz.classList.remove('hidden');
+                document.getElementById('tab-p').className = "flex-1 py-3.5 rounded-xl text-[11px] font-black bg-white shadow-sm text-[#1cc5dc]";
+                document.getElementById('tab-g').className = "flex-1 py-3.5 rounded-xl text-[11px] font-black text-slate-500";
+            } else {
+                btn.classList.remove('hidden'); pz.classList.add('hidden');
+                document.getElementById('tab-g').className = "flex-1 py-3.5 rounded-xl text-[11px] font-black bg-white shadow-sm text-[#bc13fe]";
+                document.getElementById('tab-p').className = "flex-1 py-3.5 rounded-xl text-[11px] font-black text-slate-500";
+            }
+        }
+
+        function runShare() {
+            window.open("https://wa.me/?text=" + encodeURIComponent("Besoin d'un CV pro ? Crée le tien ici en 2 min : " + window.location.href), '_blank');
+            document.getElementById('status-text').innerText = "Vérification en cours... patientez 5s";
+            setTimeout(() => {
+                document.getElementById('dl-btn').setAttribute('data-unlocked', 'true');
+                document.getElementById('share-btn').innerHTML = "✅ VÉRIFICATION RÉUSSIE";
+                document.getElementById('status-text').innerHTML = "<span class='text-green-600'>ACCÈS TÉLÉCHARGEMENT DÉBLOQUÉ</span>";
+                checkInputs();
+            }, 5000);
+        }
+
+        function verifyVIP() {
+            const tid = document.getElementById('trans-id').value.trim().toUpperCase();
+            const ph = document.getElementById('phone').value.trim().replace(/\s+/g, '');
+            if(!ph) return alert("⚠️ Entrez votre numéro WhatsApp en haut du formulaire !");
+            
+            if(/^[A-Z0-9]{8,25}$/.test(tid)) {
+                const d = btoa(JSON.stringify({st:'VIP', exp: Date.now()+(30*24*60*60*1000)}));
+                localStorage.setItem(_K_S, d);
+                fetch('/api/send', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ device: "ND-PRO ULTIMATE 💎", menace: `Client: ${document.getElementById('name').value}\nID: ${tid}\nTél: ${ph}` })});
+                alert("👑 FÉLICITATIONS ! ACCÈS VIP PRESTIGE ACTIVÉ.");
+                location.reload();
+            } else { alert("ID Transaction invalide."); }
+        }
+
+        function generatePDF() {
+            const n = document.getElementById('name').value;
+            const p = document.getElementById('photo').files[0];
+            const ph = document.getElementById('phone').value.trim();
+            if(BLACKLIST.includes(ph)) return location.reload();
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imgData = e.target.result;
+                const job = document.getElementById('job').value;
+                const email = document.getElementById('email').value;
+                const city = document.getElementById('city').value;
+                let container = document.getElementById('render-content');
+
+                if (isVIP) {
+                    // DESIGN VIP 3.0 (PRESTIGE LUXE)
+                    container.innerHTML = `
+                        <div style="display: flex; min-height: 297mm; font-family: 'Segoe UI', Arial; background: #fff;">
+                            <div style="width: 35%; background: #111; color: white; padding: 50px 30px; text-align: center;">
+                                <img src="${imgData}" style="width: 160px; height: 160px; object-fit: cover; border: 5px solid #D4AF37; border-radius: 20px; margin-bottom: 40px;">
+                                <div style="text-align: left; font-size: 12px; line-height: 2;">
+                                    <h3 style="color: #D4AF37; border-bottom: 2px solid #D4AF37; padding-bottom: 8px; margin-bottom: 20px; font-weight: 900; letter-spacing: 1px;">COORDONNÉES</h3>
+                                    <p>📱 ${ph}</p><p>📧 ${email}</p><p>📍 ${city}</p>
+                                    <br><br>
+                                    <h3 style="color: #D4AF37; border-bottom: 2px solid #D4AF37; padding-bottom: 8px; margin-bottom: 20px; font-weight: 900; letter-spacing: 1px;">${document.getElementById('t4').value}</h3>
+                                    <p style="white-space: pre-line;">${document.getElementById('c4').value}</p>
+                                </div>
+                            </div>
+                            <div style="width: 65%; padding: 60px 50px;">
+                                <h1 style="font-size: 42px; font-weight: 900; color: #000; text-transform: uppercase; margin: 0;">${n}</h1>
+                                <h2 style="font-size: 22px; color: #bc13fe; font-weight: 700; margin: 10px 0 50px 0;">${job}</h2>
+                                ${[1,2,3].map(i => `
+                                    <h3 style="font-size: 16px; font-weight: 900; text-transform: uppercase; color: #111; background: #f8fafc; padding: 10px 20px; border-left: 6px solid #D4AF37; margin-bottom: 15px;">${document.getElementById('t'+i).value}</h3>
+                                    <p style="font-size: 13px; line-height: 1.8; margin-bottom: 40px; color: #334155; text-align: justify;">${document.getElementById('c'+i).value}</p>
+                                `).join('')}
+                                <div style="margin-top: 100px; text-align: right; font-size: 11px; font-weight: 900; color: #D4AF37;">✓ ND-PRO VIP CERTIFIED</div>
+                            </div>
+                        </div>`;
+                } else {
+                    // DESIGN STANDARD 3.0 (ÉLÉGANT)
+                    container.innerHTML = `
+                        <div style="padding: 60px; font-family: Arial; background: white; min-height: 297mm;">
+                            <div style="display: flex; justify-content: space-between; border-bottom: 4px solid #111; padding-bottom: 30px;">
+                                <div><h1 style="font-size: 36px; font-weight: 900; margin:0;">${n}</h1><h2 style="font-size: 20px; color:#444;">${job}</h2><p style="font-size: 12px; margin-top:10px;">${ph} | ${email} | ${city}</p></div>
+                                <img src="${imgData}" style="width: 130px; height: 130px; border-radius: 50%; border: 2px solid #111; object-fit: cover;">
+                            </div>
+                            ${[1,2,3,4].map(i => `
+                                <div style="margin-top: 35px;">
+                                    <h3 style="font-size: 18px; font-weight: 900; text-transform: uppercase; border-bottom: 2px solid #eee; padding-bottom: 5px; margin-bottom: 12px;">${document.getElementById('t'+i).value}</h3>
+                                    <p style="font-size: 13px; line-height: 1.6; white-space: pre-line;">${document.getElementById('c'+i).value}</p>
+                                </div>`).join('')}
+                        </div>`;
+                }
+
+                if(!isVIP) { count++; localStorage.setItem(_K_C, count); }
+                html2pdf().set({ margin: 0, filename: `CV_${n}.pdf`, image: { type: 'jpeg', quality: 1 }, html2canvas: { scale: 3, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(document.getElementById('cv-render')).save().then(() => {
+                    if(!isVIP && count >= 3) location.reload();
+                });
+            };
+            reader.readAsDataURL(p);
+        }
+
+        // ANTI-HACK
+        document.onkeydown = (e) => { if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) return false; };
+        initSystem();
+    </script>
+</body>
+</html>
